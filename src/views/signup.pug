@@ -1,0 +1,10 @@
+extends templates/base
+
+block content 
+    form 
+        input(name="id" type="email" placeholder="E-mail" required)
+        input(name="password" type="password" placeholder="Password" required)
+        input(name="confirmation" type="password" placeholder="Password Confirmation" required)
+        input(name="name" type="text" placeholder="User Name" required)
+        input(name="location" type="text" placeholder="User Location" required)
+        button(type="submit") Create Account

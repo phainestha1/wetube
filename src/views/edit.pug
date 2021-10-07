@@ -1,0 +1,13 @@
+extends templates/base
+
+block content
+    h4 Change Title of your video
+    form(method="post")
+        input(
+            name="title" 
+            type="text" 
+            value=video.title 
+            placeholder="Update your video title" 
+            required
+            )
+        button(type="submit") Update

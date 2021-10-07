@@ -1,0 +1,9 @@
+extends templates/base 
+include ./mixins/video
+
+block content 
+    h1 Trending
+    each info in videos 
+        +video(info)
+    else  
+        span Sorry Nothing Found

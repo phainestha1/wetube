@@ -1,0 +1,5 @@
+extends templates/base
+
+block content
+    h1 Hi youre now watching this video! #{video.title}
+    a(href=`${video.id}/edit`) Edit &rarr;
