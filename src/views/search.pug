@@ -1,0 +1,12 @@
+extends templates/base
+include mixins/video
+
+block content
+    h4 Search Video
+    form(method="get")
+        input(name="search" type="text" placeholder="Search Videos...")
+        button(type="submit") Search
+    each video in videos 
+        +video(video)
+    else
+        span Result not found.

@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
-mongoose.connect("mongodb://127.0.0.1:27017/wetube");
+mongoose.connect(process.env.DB_URL);
 
 const db = mongoose.connection;
 
 db.on("error", (err) => {
-    console.log("DB error 🙅🏻‍♂️", err);
+  console.log("DB error 🙅🏻‍♂️", err);
 });
 db.once("open", () => {
-    console.log("Connected to DB 🔥");
-})
+  console.log("Connected to DB 🔥");
+});

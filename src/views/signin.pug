@@ -1,0 +1,16 @@
+extends templates/base
+
+block content
+    if errorMessage
+        span=errorMessage
+    form(method="post")
+        input(name="username" type="text" placeholder="UserName" required) 
+        input(name="password" type="password" placeholder="Password" required)
+        button(type="submit") Sign In
+        br
+        a(href="/users/github/start") Continue with Github 
+    hr
+    div
+        span Don't have an account yet?
+        br
+        a(href="/signup") Sign Up &rarr;

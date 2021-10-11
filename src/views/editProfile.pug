@@ -1,0 +1,35 @@
+extends templates/base
+
+block content
+    if errorMessage 
+        span=errorMessage
+    form(method="post")
+        input(
+            name="newUsername" 
+            type="text" 
+            placeholder="User Name" 
+            value=loggedInUser.username
+            required
+        )
+        input(
+            name="newName" 
+            type="text" 
+            placeholder="Name" 
+            value=loggedInUser.name
+            required
+        )
+        input(
+            name="newEmail" 
+            type="email" 
+            placeholder="E-mail"
+            value=loggedInUser.email 
+            required
+        )
+        input(
+            name="newLocation" 
+            type="text" 
+            placeholder="User Location" 
+            value=loggedInUser.location
+            required
+        )
+        button(type="submit") Update
