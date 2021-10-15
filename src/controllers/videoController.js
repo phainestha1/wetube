@@ -1,10 +1,14 @@
 import videoModel from "../model/videoModel";
+import userModel from "../model/userModel";
 
 // Controllers
 // Main Page: Home & Watch a Video
 export const home = async (req, res) => {
   try {
-    const videos = await videoModel.find({}).sort({ createdAt: "desc" });
+    const videos = await videoModel
+      .find({})
+      .sort({ createdAt: "desc" })
+      .populate("owner");
     return res.render("home", { pageTitle: "Home", videos });
   } catch {
     return res.status(404).render("404");
@@ -12,7 +16,7 @@ export const home = async (req, res) => {
 };
 export const watch = async (req, res) => {
   const { id } = req.params;
-  const video = await videoModel.findById(id);
+  const video = await videoModel.findById(id).populate("owner");
   if (!video) {
     return res.status(404).render("404");
   }
@@ -21,20 +25,26 @@ export const watch = async (req, res) => {
 
 // Upload Part
 export const getUpload = (req, res) => {
+  console.log("hello", req.file);
   return res.render("upload", { pageTitle: "upload videos" });
 };
 export const postUpload = async (req, res) => {
+  const {
+    user: { _id },
+  } = req.session;
   const { title, description, hashtags } = req.body;
+  const { path: fileUrl } = req.file;
   try {
-    await videoModel.create({
+    const newVideo = await videoModel.create({
+      fileUrl,
+      owner: _id,
       title,
       description,
       hashtags: videoModel.formatHashtags(hashtags),
-      meta: {
-        views: 0,
-        rating: 0,
-      },
     });
+    const user = await userModel.findById(_id);
+    user.videos.push(newVideo._id);
+    user.save();
     return res.redirect("/");
   } catch (error) {
     return res.status(400).render("upload", {
@@ -51,6 +61,9 @@ export const getEdit = async (req, res) => {
   if (!video) {
     return res.status(404).render("404");
   }
+  if (String(video.owner) !== String(req.session.user._id)) {
+    return res.status(403).redirect("/");
+  }
   return res.render("edit", { pageTitle: `Editing`, video });
 };
 
@@ -60,6 +73,9 @@ export const postEdit = async (req, res) => {
   const video = await videoModel.exists({ _id: id });
   if (!video) {
     return res.status(404).render("404");
+  }
+  if (String(video.owner) !== String(req.session.user._id)) {
+    return res.status(403).redirect("/");
   }
   await videoModel.findByIdAndUpdate(id, {
     title,
@@ -72,6 +88,13 @@ export const postEdit = async (req, res) => {
 // Removae Part
 export const remove = async (req, res) => {
   const { id } = req.params;
+  const video = await videoModel.findById(id);
+  if (!video) {
+    return res.status(404).render("404", { pageTitle: "Video not found." });
+  }
+  if (String(video.owner) !== String(req.session.user._id)) {
+    return res.status(403).redirect("/");
+  }
   await videoModel.findByIdAndDelete(id);
   return res.redirect("/");
 };
@@ -88,4 +111,16 @@ export const search = async (req, res) => {
     });
   }
   return res.render("search", { pageTitle: "Search", videos });
+};
+
+// Views
+export const registerView = async (req, res) => {
+  const { id } = req.params;
+  const video = await videoModel.findById(id);
+  if (!video) {
+    return res.sendStatus(404);
+  }
+  video.meta.views = video.meta.views + 1;
+  await video.save();
+  return res.sendStatus(200);
 };

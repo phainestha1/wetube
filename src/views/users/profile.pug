@@ -1,0 +1,11 @@
+extends ../templates/base
+include ../mixins/video
+
+block content
+    h3 Uploaded Videos
+    each info in user.videos
+        +video(info)
+    else
+        span This user uploaded nothing yet.
+    if id === loggedInUser._id
+        a(href=`/users/${loggedInUser._id}/edit`) Edit Profile

@@ -1,0 +1,34 @@
+//config
+@import "../config/_variables.scss";
+
+//side menu
+sideMenu {
+  background-color: #202020;
+  padding: 15px 0 0 0;
+
+  .side_container {
+    display: flex;
+    flex-direction: column;
+    width: 6.5vw;
+    max-width: 73px;
+    text-align: center;
+
+    a {
+      display: flex;
+      flex-direction: column;
+      font-size: 19px;
+      width: 100%;
+      padding: 15px 0;
+      height: 100%;
+
+      label {
+        padding-top: 7px;
+        font-size: 11px;
+        cursor: pointer;
+      }
+    }
+    a:hover {
+      background-color: #303030;
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import userModel from "../model/userModel";
+import videoModel from "../model/videoModel";
 import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
@@ -151,20 +152,30 @@ export const signout = (req, res) => {
 };
 
 // Profile
-export const profile = (req, res) => {
-  return res.render("profile", { pageTitle: "Profile" });
+export const profile = async (req, res) => {
+  const { id } = req.params;
+  const user = await userModel.findById(id).populate("videos");
+  if (!user) {
+    return res.status(404).render("404", { pageTitle: "User not found" });
+  }
+  return res.render("users/profile", {
+    pageTitle: user.name,
+    user,
+    id,
+  });
 };
-export const see = (req, res) => {};
 
+// Profile Edit
 export const getEdit = (req, res) => {
   return res.render("editProfile", { pageTitle: "Edit Profile" });
 };
 export const postEdit = async (req, res) => {
   const {
     session: {
-      user: { _id },
+      user: { _id: id, avatarUrl },
     },
     body: { newUsername, newEmail, newName, newLocation },
+    file,
   } = req;
   const usernameExists = await userModel.exists({ username: newUsername });
   const emailExists = await userModel.exists({ email: newEmail });
@@ -173,8 +184,9 @@ export const postEdit = async (req, res) => {
   if (usernameExists) {
     if (req.session.user.username === newUsername) {
       const updatedUsername = await userModel.findByIdAndUpdate(
-        _id,
+        id,
         {
+          avatarUrl: file ? file.path : avatarUrl,
           username: newUsername,
           name: newName,
           location: newLocation,
@@ -194,8 +206,9 @@ export const postEdit = async (req, res) => {
   } else if (emailExists) {
     if (req.session.user.email === newEmail) {
       const updatedEmail = await userModel.findByIdAndUpdate(
-        _id,
+        id,
         {
+          avatarUrl: file ? file.path : avatarUrl,
           email: newEmail,
           name: newName,
           location: newLocation,
@@ -215,8 +228,9 @@ export const postEdit = async (req, res) => {
   }
 
   const updatedUser = await userModel.findByIdAndUpdate(
-    _id,
+    id,
     {
+      avatarUrl: file ? file.path : avatarUrl,
       username: newUsername,
       email: newEmail,
       name: newName,
@@ -229,6 +243,43 @@ export const postEdit = async (req, res) => {
     pageTitle: "Edit Profile",
     errorMessage: "Profile updated",
   });
+};
+
+// Password Change
+export const getChangePassword = (req, res) => {
+  if (req.session.user.socialOnly === true) {
+    return res.redirect("/");
+  }
+  return res.render("users/changePassword", { pageTitle: "Change Password" });
+};
+export const postChangePassword = async (req, res) => {
+  const {
+    body: { oldPassword, newPassword, newPasswordConfirmation },
+    session: {
+      user: { _id: id, password: sessionPassword },
+    },
+  } = req;
+  const passwordVerification = await bcrypt.compare(
+    oldPassword,
+    sessionPassword
+  );
+  if (!passwordVerification) {
+    return res.status(400).render("users/changePassword", {
+      pageTitle: "Change Password",
+      errorMessage: "Password is not correct.",
+    });
+  }
+  if (newPassword !== newPasswordConfirmation) {
+    return res.status(400).render("users/changePassword", {
+      pageTitle: "Change Password",
+      errorMessage: "Confirmation does not match.",
+    });
+  }
+  const user = await userModel.findById(id);
+  user.password = newPassword;
+  await user.save();
+  req.session.user.password = user.password;
+  return res.redirect("/users/signout");
 };
 
 export const remove = (req, res) => {};

@@ -7,20 +7,32 @@ import {
   remove,
   startGithubSignin,
   finishGithubSignin,
+  getChangePassword,
+  postChangePassword,
 } from "../controllers/userController";
-import { protectorMiddleware, publicOnlyMiddleware } from "../middlewares";
+import {
+  avatarUpload,
+  protectorMiddleware,
+  publicOnlyMiddleware,
+} from "../middlewares";
 
 const userRouter = express.Router();
 
 userRouter.get("/github/start", publicOnlyMiddleware, startGithubSignin);
 userRouter.get("/github/finish", publicOnlyMiddleware, finishGithubSignin);
 userRouter.get("/signout", protectorMiddleware, signout);
-userRouter.get("/profile", protectorMiddleware, profile);
+userRouter.get("/:id", profile);
 userRouter
-  .route("/profile/edit")
+  .route("/:id/edit")
   .all(protectorMiddleware)
   .get(getEdit)
-  .post(postEdit);
-userRouter.get("/profile/remove", remove);
+  .post(avatarUpload.single("avatar"), postEdit);
+userRouter
+  .route("/:id/edit/change-password")
+  .all(protectorMiddleware)
+  .get(getChangePassword)
+  .post(postChangePassword);
+
+userRouter.get("/:id/remove", remove);
 
 export default userRouter;

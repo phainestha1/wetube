@@ -1,30 +1,50 @@
 extends templates/base
 
 block content
-    if errorMessage
-        span=errorMessage
-    form(method="post")
-        //- input(name="file" type="file" accept="video/*")
-        input(
-            name="title" 
-            type="text" 
-            placeholder="Video Title" 
-            maxlength=80
-            required
-            ) 
-        input(
-            name="description" 
-            type="text" 
-            placeholder="Description" 
-            maxlength=1000
-            required
-            ) 
-        input(
-            name="hashtags" 
-            type="text" 
-            placeholder="Hashtags" 
-            required
-            )
-        button(type="submit") Upload 
-    
-    span enctype input needed
+    div.title_container
+        h1 채널 콘텐츠
+    div.upload_container
+        h2 영상 업로드
+        div.bottom_box
+            div.video_preview
+                if errorMessage
+                    span=errorMessage
+                h1#videoMessage
+                video(id="videoPreview" controls)
+            div.form_container
+                form(method="post" enctype="multipart/form-data")
+                    label(for="video")
+                        i.far.fa-plus-square 
+                        span 클릭하여 파일을 첨부하세요.
+                    input(
+                        name="video" 
+                        id="video" 
+                        type="file" 
+                        accept="video/*"
+                        required
+                        ).fileUpload
+                    input(
+                        name="title" 
+                        type="text" 
+                        placeholder="제목" 
+                        maxlength=80
+                        required
+                        ) 
+                    input(
+                        name="description" 
+                        type="text" 
+                        placeholder="설명" 
+                        maxlength=1000
+                        required
+                        ) 
+                    input(
+                        name="hashtags" 
+                        type="text" 
+                        placeholder="해쉬 태그" 
+                        required
+                        )
+                    button(type="submit").far.fa-caret-square-up
+
+
+block scripts
+    script(src="/assets/js/videoUpload.js")

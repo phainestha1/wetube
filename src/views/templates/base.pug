@@ -4,27 +4,17 @@ html(lang="en")
         meta(charset="UTF-8")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        link(rel="stylesheet" href="https://unpkg.com/mvp.css")
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css")
+        link(rel="stylesheet" href="/assets/css/styles.css")
         title #{pageTitle} | #{siteName}
-    body 
-        header
-            h2=pageTitle
-            nav
-                ul
-                    li 
-                        a(href="/") Home
-                    li
-                        a(href="/search") Search
-                    if loggedIn 
-                        li 
-                            a(href="/videos/upload") Upload 
-                        li 
-                            a(href="/users/profile") #{loggedInUser.name}의 Profile 
-                        li
-                            a(href="/users/signout") Sign Out
-                    else
-                        li 
-                            a(href="/signin") Sign In 
-                    
-        main 
-            block content 
+    body
+        div.top 
+        include ../partials/header
+        div.bottom_container
+            div.sidebar
+                include ../partials/sideMenu
+            div.main_page           
+                main 
+                    block content
+    block scripts 
+        

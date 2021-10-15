@@ -7,7 +7,7 @@ import {
   postEdit,
   remove,
 } from "../controllers/videoController";
-import { protectorMiddleware } from "../middlewares";
+import { protectorMiddleware, videoUploads } from "../middlewares";
 
 const videoRouter = express.Router();
 
@@ -16,7 +16,7 @@ videoRouter
   .route("/upload")
   .all(protectorMiddleware)
   .get(getUpload)
-  .post(postUpload);
+  .post(videoUploads.single("video"), postUpload);
 videoRouter
   .route("/:id([0-9a-f]{24})/edit")
   .all(protectorMiddleware)

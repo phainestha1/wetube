@@ -1,0 +1,44 @@
+// config
+@import "../config/_variables.scss";
+@import "../config/_reset.scss";
+
+// components
+@import "../components/header.scss";
+@import "../components/sideMenu.scss";
+@import "../components/home.scss";
+@import "../components/upload.scss";
+
+// screens
+
+// defaults
+a {
+  text-decoration: none;
+  color: $font_color;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  background-color: $bg_color;
+  color: $font_color;
+  overflow: hidden;
+
+  .bottom_container {
+    display: flex;
+    width: 100vw;
+
+    .sidebar {
+      display: flex;
+      width: 6.5vw;
+      max-width: 73px;
+      height: 100vh;
+    }
+    .main_page {
+      display: flex;
+      margin: 0;
+      width: 100%;
+    }
+  }
+}
