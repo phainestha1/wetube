@@ -1,0 +1,40 @@
+div.edit_section
+    if errorMessage 
+        span=errorMessage
+    div.edit_container
+        div.profile_edit_avatarUrl
+            img(id="avatar_image" src="/"+loggedInUser.avatarUrl width="100", height="100")
+        div.profile_edit_infoContainer
+            div.edit_form
+                form(method="post" action=`/users/${loggedInUser._id}/edit` enctype="multipart/form-data")
+                    div.info_input
+                        label(for="avatar")
+                            i.fas.fa-camera
+                        input(
+                            name="avatar" 
+                            type="file"
+                            accept="image/*" 
+                            id="avatar"
+                            )
+                        input(
+                            name="newUsername" 
+                            type="text" 
+                            placeholder="User Name" 
+                            value=loggedInUser.username
+                            required
+                        )
+                        input(
+                            name="newLocation" 
+                            type="text" 
+                            placeholder="User Location" 
+                            value=loggedInUser.location
+                            required
+                        )
+                    div.update_btn 
+                        button(type="submit") 변경 완료
+            div.error_message_container    
+                if !loggedInUser.socialOnly
+                    hr
+div.password_change_btn
+    a(href=`/users/${loggedInUser._id}/edit/change-password`)
+        button 비밀번호 변경

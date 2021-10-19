@@ -2,6 +2,7 @@ import "dotenv/config";
 import "./db";
 import "./model/videoModel";
 import "./model/userModel";
+import "./model/commentModel";
 import app from "./server";
 
 // Application Listening & PORT No. Setting

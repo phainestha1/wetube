@@ -113,6 +113,7 @@ header {
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.3);
   overflow: scroll;
+  z-index: 9999;
 }
 
 .modal_menu {

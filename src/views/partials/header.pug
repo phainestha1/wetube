@@ -1,82 +1,83 @@
 header
-    div.modal_container.hidden
-        div.modal_menu
-            div.logo_box
-                div.logo_container
-                    button.modal_hidden
-                        i.fas.fa-bars
-                    a(href="/").header_logo
-                        i.fab.fa-youtube
-                        h3 NomadTube        
-            div.icon_container
-                div.menu_box
-                    div.icon_box
-                        a(href="/")#side_home
-                            i.fas.fa-home
-                    div.label_box
-                        label(for="side_home") 홈
-                div.menu_box
-                    div.icon_box
-                        a(href="")#side_compass
-                            i.far.fa-compass
-                    div.label_box
-                        label(for="side_compass") 탐색
-                div.menu_box
-                    div.icon_box
-                        a(href="")#side_history
-                            i.fas.fa-history
-                    div.label_box
-                        label(for="side_compass") 시청 기록
-            div.icon_container
-                div.menu_box
-                    div.icon_box
-                        a(href="")#side_database
-                            i.fas.fa-database
-                    div.label_box
-                        label(for="side_database") 보관함
-                div.menu_box
-                    div.icon_box
-                        a(href="")#side_later
-                            i.far.fa-clock
-                    div.label_box
-                        label(for="side_later") 나중에 볼 영상
-                div.menu_box
-                    div.icon_box
-                        a(href="")#side_like
-                            i.far.fa-thumbs-up
-                    div.label_box
-                        label(for="side_like") 좋아요 표시한 동영상
-                div.menu_box
-                    div.icon_box
-                        a(href="")#side_myVideo
-                            i.fas.fa-box-open
-                    div.label_box
-                        label(for="side_myVideo") 내 동영상
-                div.menu_box
-                    div.icon_box
-                        a(href="")#side_upload
-                            i.fas.fa-file-upload
-                    div.label_box
-                        label(for="side_upload") 업로드
-                div.menu_box
-                    div.icon_box
-                        a(href="")#side_link
-                            i.fas.fa-link
-                    div.label_box
-                        label(for="side_link") 링크
-            div.icon_container
-                span#modal_message 구독
-                div.menu_box
-                    div.icon_box
-                        a(href="https://www.youtube.com/c/%EB%85%B8%EB%A7%88%EB%93%9C%EC%BD%94%EB%8D%94NomadCoders")
-                            img(src="https://nomadcoders.co/m.svg" )
-                    div.label_box
-                        label 노마드 코더 Nomad C...
-            div.footer
-                span &copy; Nomadcoders Wetube Challenge
-                span Oct 2021 Phainestha1
-
-
+    //- Modal Container
+    if loggedIn 
+        div.modal_container.hidden
+            div.modal_menu
+                    div.logo_box
+                        div.logo_container
+                            button.modal_hidden
+                                i.fas.fa-bars
+                            a(href="/").header_logo
+                                i.fab.fa-youtube
+                                h3 NomadTube        
+                    div.icon_container
+                        div.menu_box
+                            div.icon_box
+                                a(href="/")#side_home
+                                    i.fas.fa-home
+                            div.label_box
+                                label(for="side_home") 홈
+                        div.menu_box
+                            div.icon_box
+                                a(href="")#side_compass
+                                    i.far.fa-compass
+                            div.label_box
+                                label(for="side_compass") 탐색
+                        div.menu_box
+                            div.icon_box
+                                a(href="")#side_history
+                                    i.fas.fa-history
+                            div.label_box
+                                label(for="side_compass") 시청 기록
+                    div.icon_container
+                        div.menu_box
+                            div.icon_box
+                                a(href="")#side_database
+                                    i.fas.fa-database
+                            div.label_box
+                                label(for="side_database") 보관함
+                        div.menu_box
+                            div.icon_box
+                                a(href="")#side_later
+                                    i.far.fa-clock
+                            div.label_box
+                                label(for="side_later") 나중에 볼 동영상
+                        div.menu_box
+                            div.icon_box
+                                a(href="")#side_like
+                                    i.far.fa-thumbs-up
+                            div.label_box
+                                label(for="side_like") 좋아요 표시한 동영상
+                        div.menu_box
+                            div.icon_box
+                                a(href="")#side_myVideo
+                                    i.fas.fa-box-open
+                            div.label_box
+                                label(for="side_myVideo") 내 동영상
+                        div.menu_box
+                            div.icon_box
+                                a(href="")#side_upload
+                                    i.fas.fa-file-upload
+                            div.label_box
+                                label(for="side_upload") 업로드
+                        div.menu_box
+                            div.icon_box
+                                a(href="")#side_link
+                                    i.fas.fa-link
+                            div.label_box
+                                label(for="side_link") 링크
+                    div.icon_container
+                        span#modal_message 구독
+                        div.menu_box
+                            div.icon_box
+                                a(href="https://www.youtube.com/c/%EB%85%B8%EB%A7%88%EB%93%9C%EC%BD%94%EB%8D%94NomadCoders")
+                                    img(src="https://nomadcoders.co/m.svg" )
+                            div.label_box
+                                label 노마드 코더 Nomad C...
+                    div.footer
+                        span &copy; Nomadcoders Wetube Challenge
+                        span Oct 2021 Phainestha1
+    //- Header
     div.logo_container
         button.modal_showing
             i.fas.fa-bars
@@ -98,11 +99,11 @@ header
             a(href="/")#notification
                 i.far.fa-bell
             a(href=`/users/${loggedInUser._id}`)
-                img(src=loggedInUser.avatarUrl).header_profileImage 
+                img(src="/" + loggedInUser.avatarUrl).header_profileImage 
         else 
             a(href="/signin")#signIn
                 i.far.fa-user-circle 
                 label(for="signIn") 로그인
 
 block scripts 
-    script(src="/assets/js/header.js")
+    script(src="/assets/js/modal.js")

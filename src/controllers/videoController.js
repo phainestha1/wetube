@@ -1,5 +1,7 @@
 import videoModel from "../model/videoModel";
 import userModel from "../model/userModel";
+import commentModel from "../model/commentModel";
+import date from "date-and-time";
 
 // Controllers
 // Main Page: Home & Watch a Video
@@ -16,11 +18,18 @@ export const home = async (req, res) => {
 };
 export const watch = async (req, res) => {
   const { id } = req.params;
-  const video = await videoModel.findById(id).populate("owner");
+  const videos = await videoModel
+    .find({})
+    .sort({ createdAt: "desc" })
+    .populate("owner");
+  const video = await videoModel
+    .findById(id)
+    .populate("owner")
+    .populate("comments");
   if (!video) {
     return res.status(404).render("404");
   }
-  return res.render("watch", { pageTitle: video.title, video });
+  return res.render("watch", { pageTitle: video.title, video, videos });
 };
 
 // Upload Part
@@ -34,12 +43,14 @@ export const postUpload = async (req, res) => {
   } = req.session;
   const { title, description, hashtags } = req.body;
   const { path: fileUrl } = req.file;
+  const createdAt = date.format(new Date(), "YYYY.MM.DD");
   try {
     const newVideo = await videoModel.create({
       fileUrl,
       owner: _id,
       title,
       description,
+      createdAt,
       hashtags: videoModel.formatHashtags(hashtags),
     });
     const user = await userModel.findById(_id);
@@ -62,11 +73,11 @@ export const getEdit = async (req, res) => {
     return res.status(404).render("404");
   }
   if (String(video.owner) !== String(req.session.user._id)) {
+    req.flash("error", "Not authorized");
     return res.status(403).redirect("/");
   }
   return res.render("edit", { pageTitle: `Editing`, video });
 };
-
 export const postEdit = async (req, res) => {
   const { id } = req.params;
   const { title, description, hashtags } = req.body;
@@ -123,4 +134,28 @@ export const registerView = async (req, res) => {
   video.meta.views = video.meta.views + 1;
   await video.save();
   return res.sendStatus(200);
+};
+
+export const createComment = async (req, res) => {
+  const {
+    session: { user },
+    body: { text },
+    params: { id },
+  } = req;
+  const video = await videoModel.findById(id);
+  if (!video) {
+    return res.sendStatus(400);
+  }
+  const createdAt = date.format(new Date(), "YYYY.MM.DD");
+  const comment = await commentModel.create({
+    text,
+    owner: user._id,
+    ownerName: user.username,
+    ownerAvatarUrl: user.avatarUrl,
+    video: id,
+    createdAt,
+  });
+  video.comments.push(comment._id);
+  video.save();
+  return res.status(201).json({ newCommentId: comment._id });
 };

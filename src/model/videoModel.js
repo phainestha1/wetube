@@ -13,7 +13,7 @@ const videoSchema = new mongoose.Schema({
     maxLength: 1000,
   },
   createdAt: {
-    type: Date,
+    type: String,
     required: true,
     default: Date.now,
   },
@@ -30,6 +30,13 @@ const videoSchema = new mongoose.Schema({
       required: true,
     },
   },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "commentModel",
+    },
+  ],
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,

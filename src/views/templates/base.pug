@@ -8,11 +8,13 @@ html(lang="en")
         link(rel="stylesheet" href="/assets/css/styles.css")
         title #{pageTitle} | #{siteName}
     body
+        if messages.error 
+            span=messages.error
+        if messages.info 
+            span=messages.info
         div.top 
-        include ../partials/header
+            include ../partials/header
         div.bottom_container
-            div.sidebar
-                include ../partials/sideMenu
             div.main_page           
                 main 
                     block content

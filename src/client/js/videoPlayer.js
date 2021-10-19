@@ -1,18 +1,20 @@
 const video = document.querySelector("video");
-const playBtn = document.getElementById("play");
-const muteBtn = document.getElementById("mute");
+const playBtn = document.getElementById("play_icon");
+const muteBtn = document.getElementById("mute_icon");
 const currentTime = document.getElementById("currentTime");
 const totalTime = document.getElementById("totalTime");
 const volumeRange = document.getElementById("volumeRange");
 const timeline = document.getElementById("timeLine");
-const fullscreenBtn = document.getElementById("fullscreen");
-const videoContainer = document.getElementById("videoContainer");
-const videoControls = document.getElementById("videoControls");
+const fullscreenBtn = document.getElementById("fullscreen_icon");
+const videoContainer = document.querySelector(".video_container");
+const videoControls = document.querySelector(".video_controls");
 
 let controlsTimeout = null;
 let controlsMovementTimeOut = null;
 let volumeValue = 0.3;
 video.volume = volumeValue;
+video.play();
+playBtn.className = "fas fa-pause";
 
 // Functions
 const handlePlayBtn = () => {
@@ -21,7 +23,7 @@ const handlePlayBtn = () => {
   } else {
     video.pause();
   }
-  playBtn.innerText = video.paused ? "Play" : "Pause";
+  playBtn.className = video.paused ? "fas fa-play" : "fas fa-pause";
 };
 const handleMuteBtn = () => {
   if (video.muted) {
@@ -29,14 +31,15 @@ const handleMuteBtn = () => {
   } else {
     video.muted = true;
   }
-  muteBtn.innerText = video.muted ? "Unmute" : "Mute";
+  muteBtn.className = video.muted ? "fas fa-volume-up" : "fas fa-volume-mute";
   volumeRange.value = video.muted ? 0 : volumeValue;
 };
 const handleVolumeChange = (event) => {
   const { value } = event.target;
+  console.log(value);
   if (video.muted) {
     video.muted = false;
-    muteBtn.innerText = "Mute";
+    muteBtn.className = "fas fa-volume-mute";
   }
   volumeValue = value;
   video.volume = value;
@@ -60,14 +63,14 @@ const handleFullscreen = () => {
   const fullscreen = document.fullscreenElement;
   if (fullscreen) {
     document.exitFullscreen();
-    fullscreenBtn.innerText = "Fullscreen";
+    fullscreenBtn.className = "fas fa-expand";
   } else {
     videoContainer.requestFullscreen();
-    fullscreenBtn.innerText = "Exit Fullscreen";
+    fullscreenBtn.className = "fas fa-compress";
   }
 };
 
-const hideControls = () => videoControls.classList.remove("showing");
+const hideControls = () => videoControls.classList.add("hidden");
 const handleMouseMove = () => {
   if (controlsTimeout) {
     clearTimeout(controlsTimeout);
@@ -77,11 +80,11 @@ const handleMouseMove = () => {
     clearTimeout(controlsMovementTimeOut);
     controlsMovementTimeOut = null;
   }
-  videoControls.classList.add("showing");
-  controlsMovementTimeOut = setTimeout(hideControls, 3000);
+  videoControls.classList.remove("hidden");
+  controlsMovementTimeOut = setTimeout(hideControls, 5000);
 };
 const handleMouseLeave = () => {
-  controlsTimeout = setTimeout(hideControls, 3000);
+  controlsTimeout = setTimeout(hideControls, 1000);
 };
 
 const handleEnded = () => {

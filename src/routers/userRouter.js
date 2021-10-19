@@ -2,7 +2,6 @@ import express from "express";
 import {
   profile,
   signout,
-  getEdit,
   postEdit,
   remove,
   startGithubSignin,
@@ -25,7 +24,6 @@ userRouter.get("/:id", profile);
 userRouter
   .route("/:id/edit")
   .all(protectorMiddleware)
-  .get(getEdit)
   .post(avatarUpload.single("avatar"), postEdit);
 userRouter
   .route("/:id/edit/change-password")

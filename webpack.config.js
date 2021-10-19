@@ -1,13 +1,15 @@
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const BASE_JS = "./src/client/js/";
 
 module.exports = {
   entry: {
-    main: "./src/client/js/main.js",
-    videoPlayer: "./src/client/js/videoPlayer.js",
-    videoUpload: "./src/client/js/videoUpload.js",
-    header: "./src/client/js/header.js",
+    main: BASE_JS + "main.js",
+    videoPlayer: BASE_JS + "videoPlayer.js",
+    videoUpload: BASE_JS + "videoUpload.js",
+    modal: BASE_JS + "modal.js",
+    commentSection: BASE_JS + "commentSection.js",
   },
   mode: "development",
   watch: true,

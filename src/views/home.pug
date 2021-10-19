@@ -2,26 +2,30 @@ extends templates/base
 include ./mixins/video
 
 block content
-    div.category_menu
-        div.left_arrow_container 
-            button#left_arrow
-                i.fas.fa-chevron-left
-        div.topic_container
-            span 전체
-            span 실시간
-            span 음악
-            span 취미
-            span 힙합
-            span 코딩
-            span 자바스크립트
-            span 노마드코더
-            span 유튜브
-            span 챌린지
-        div.right_arrow_container
-            button#right_arrow
-                i.fas.fa-chevron-right
-    div.video_container 
-        each info in videos 
-            +video(info)
-        else  
-            span Sorry Nothing Found
+    div.sidebar
+        include ./partials/sideMenu
+    div.contents
+        div.category_menu
+            div.left_arrow_container 
+                button#left_arrow
+                    i.fas.fa-chevron-left
+            div.topic_container
+                span 전체
+                span 실시간
+                span 음악
+                span 취미
+                span 힙합
+                span 코딩
+                span 자바스크립트
+                span 노마드코더
+                span 유튜브
+                span 챌린지
+            div.right_arrow_container
+                button#right_arrow
+                    i.fas.fa-chevron-right
+
+        div.video_container 
+            each info in videos 
+                +video(info)
+            else  
+                span Sorry Nothing Found

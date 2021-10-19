@@ -147,7 +147,10 @@ export const finishGithubSignin = async (req, res) => {
 
 // Sign Out
 export const signout = (req, res) => {
-  req.session.destroy();
+  req.flash("info", "로그아웃 되었습니다.");
+  req.session.user = null;
+  res.locals.loggedInUser = req.session.user;
+  req.session.loggedIn = false;
   return res.redirect("/");
 };
 
@@ -155,6 +158,7 @@ export const signout = (req, res) => {
 export const profile = async (req, res) => {
   const { id } = req.params;
   const user = await userModel.findById(id).populate("videos");
+  console.log(id);
   if (!user) {
     return res.status(404).render("404", { pageTitle: "User not found" });
   }
@@ -166,9 +170,6 @@ export const profile = async (req, res) => {
 };
 
 // Profile Edit
-export const getEdit = (req, res) => {
-  return res.render("editProfile", { pageTitle: "Edit Profile" });
-};
 export const postEdit = async (req, res) => {
   const {
     session: {
@@ -194,12 +195,12 @@ export const postEdit = async (req, res) => {
         { new: true }
       );
       req.session.user = updatedUsername;
-      return res.render("editProfile", {
+      return res.render("users/editProfile", {
         pageTitle: "Edit Profile",
         errorMessage: "Username was updated.",
       });
     }
-    return res.status(400).render("editProfile", {
+    return res.status(400).render("users/editProfile", {
       pageTitle: "Edit Profile",
       errorMessage: "Username is already taken",
     });
@@ -216,12 +217,12 @@ export const postEdit = async (req, res) => {
         { new: true }
       );
       req.session.user = updatedEmail;
-      return res.render("editProfile", {
+      return res.render("users/editProfile", {
         pageTitle: "Edit Profile",
         errorMessage: "Email was updated.",
       });
     }
-    return res.status(400).render("editProfile", {
+    return res.status(400).render("users/editProfile", {
       pageTitle: "Edit Profile",
       errorMessage: "Email is already taken",
     });
@@ -239,15 +240,13 @@ export const postEdit = async (req, res) => {
     { new: true }
   );
   req.session.user = updatedUser;
-  return res.render("editProfile", {
-    pageTitle: "Edit Profile",
-    errorMessage: "Profile updated",
-  });
+  return res.redirect(`/users/${id}`);
 };
 
 // Password Change
 export const getChangePassword = (req, res) => {
   if (req.session.user.socialOnly === true) {
+    req.flash("error", "비밀번호를 변경할 수 없습니다.");
     return res.redirect("/");
   }
   return res.render("users/changePassword", { pageTitle: "Change Password" });
@@ -279,6 +278,7 @@ export const postChangePassword = async (req, res) => {
   user.password = newPassword;
   await user.save();
   req.session.user.password = user.password;
+  req.flash("info", "비밀번호가 변경되었습니다.");
   return res.redirect("/users/signout");
 };
 

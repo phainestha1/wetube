@@ -1,11 +1,17 @@
 extends ../templates/base
-include ../mixins/video
+include ../mixins/profileVideo
 
 block content
-    h3 Uploaded Videos
-    each info in user.videos
-        +video(info)
-    else
-        span This user uploaded nothing yet.
-    if id === loggedInUser._id
-        a(href=`/users/${loggedInUser._id}/edit`) Edit Profile
+    div.sidebar
+        include ../partials/sideMenu
+    div.profile_container
+        div.user_info
+            include editProfile
+        div.user_videos
+            div.upload_message
+                h3 업로드한 동영상
+            div.video_list
+                each info in user.videos
+                    +video(info)
+                else
+                    span This user uploaded nothing yet.
