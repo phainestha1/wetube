@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 
 // Sign Up
 export const getSignup = (req, res) => {
-  return res.render("signup", { pageTitle: "Sign Up" });
+  return res.render("users/signup", { pageTitle: "Sign Up" });
 };
 export const postSignup = async (req, res) => {
   const { username, name, email, password, pwConfirmation, location } =
@@ -15,13 +15,13 @@ export const postSignup = async (req, res) => {
   });
   const pageTitle = "Sign Up";
   if (password !== pwConfirmation) {
-    return res.status(400).render("signup", {
+    return res.status(400).render("users/signup", {
       pageTitle,
       errorMessage: "Please check password confirmation again",
     });
   }
   if (userInfoExists) {
-    return res.status(400).render("signup", {
+    return res.status(400).render("users/signup", {
       pageTitle,
       errorMessage: "This username / E-mail is already taken.",
     });
@@ -36,7 +36,7 @@ export const postSignup = async (req, res) => {
     });
     return res.redirect("/signin");
   } catch (error) {
-    return res.status(400).render("signup", {
+    return res.status(400).render("users/signup", {
       pageTitle,
       errorMessage: error._message,
     });
@@ -45,7 +45,7 @@ export const postSignup = async (req, res) => {
 
 // Sign In
 export const getSignin = (req, res) => {
-  return res.render("signin", { pageTitle: "Sign In" });
+  return res.render("users/signin", { pageTitle: "Sign In" });
 };
 export const postSignin = async (req, res) => {
   const { username, password } = req.body;
@@ -54,14 +54,14 @@ export const postSignin = async (req, res) => {
   const pwVerification = await bcrypt.compare(password, user.password);
 
   if (!user) {
-    return res.status(400).render("/signin", {
+    return res.status(400).render("users/signin", {
       pageTitle,
       errorMessage: "Username does not exists.",
     });
   }
 
   if (!pwVerification) {
-    return res.status(400).render("/signin", {
+    return res.status(400).render("users/signin", {
       pageTitle,
       errorMessage: "Wrong Password",
     });

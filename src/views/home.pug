@@ -1,6 +1,5 @@
 extends templates/base 
 include ./mixins/video
-
 block content
     div.sidebar
         include ./partials/sideMenu
@@ -27,5 +26,7 @@ block content
         div.video_container 
             each info in videos 
                 +video(info)
-            else  
-                span Sorry Nothing Found
+            else
+                div.no_video_founded
+                    i.far.fa-frown 
+                    span Sorry Nothing Found

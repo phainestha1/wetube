@@ -1,0 +1,106 @@
+.signin_body {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+.signin_container {
+  display: flex;
+  width: 400px;
+  height: 600px;
+  flex-direction: column;
+  .signin_logobox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    i {
+      color: $logo_color;
+      font-size: 30px;
+      padding-left: 8px;
+    }
+    h3 {
+      color: white;
+      font-size: 18px;
+      padding-left: 5px;
+    }
+  }
+}
+.signin_form {
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    input {
+      width: 80%;
+      height: 25px;
+      color: white;
+      background-color: transparent;
+      border: none;
+      border-bottom: 1px solid white;
+      margin-top: 10px;
+      text-align: center;
+      &:focus {
+        outline: none;
+      }
+    }
+    button {
+      margin-top: 25px;
+      color: white;
+      padding: 10px 12px;
+      background-color: transparent;
+      border: 1px solid aliceblue;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: 0.2s;
+      &:hover {
+        border-color: black;
+        background-color: white;
+        color: black;
+      }
+    }
+  }
+}
+.signin_github {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+  a {
+    padding: 5px 14px;
+    border: 1px solid white;
+    border-radius: 3px;
+    transition: 0.2s;
+    &:hover {
+      border-color: black;
+      background-color: white;
+      color: black;
+    }
+    i {
+      margin-left: 3px;
+    }
+  }
+}
+.signin_signup_request {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  a {
+    color: #3da6ff;
+    margin-top: 10px;
+    padding: 8px 12px;
+    border: 1px solid #3da6ff;
+    border-radius: 3px;
+    transition: 0.2s;
+    &:hover {
+      color: black;
+      background-color: #3da6ff;
+    }
+  }
+}

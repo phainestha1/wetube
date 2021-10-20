@@ -2,7 +2,7 @@ mixin watchVideo(info)
     a(href=`/videos/${info.id}`).video_watch_contents
         div.video_thumnail
             img(
-                src="https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80"
+                src="/" + info.thumbUrl
                 width="168"
                 height="94" 
                )
@@ -11,7 +11,7 @@ mixin watchVideo(info)
                 small=info.title
             div.video_watch_infoContainer
                 div.name      
-                    small#video_creator=info.owner.name
+                    small#video_creator=info.owner.username
                 div.views_createdAt
                     small#video_views 조회수 #{info.meta.views}회
                     small •

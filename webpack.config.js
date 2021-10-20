@@ -1,7 +1,7 @@
 const path = require("path");
-const nodeExternals = require("webpack-node-externals");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const BASE_JS = "./src/client/js/";
+// const nodeExternals = require("webpack-node-externals");
 
 module.exports = {
   entry: {
@@ -40,6 +40,5 @@ module.exports = {
       },
     ],
   },
-  externalsPresets: { node: true },
-  externals: [nodeExternals()],
+  target: "web",
 };

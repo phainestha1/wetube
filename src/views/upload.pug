@@ -15,13 +15,23 @@ block content
                 div.form_container
                     form(method="post" enctype="multipart/form-data")
                         label(for="video")
-                            i.far.fa-plus-square 
-                            span 클릭하여 파일을 첨부하세요.
+                            i.far.fa-file-video 
+                            span 영상 첨부
                         input(
                             name="video" 
                             id="video" 
                             type="file" 
                             accept="video/*"
+                            required
+                            ).fileUpload
+                        label(for="thumb")
+                            i.far.fa-image 
+                            span 썸네일 첨부
+                        input(
+                            name="thumb" 
+                            id="thumb" 
+                            type="file" 
+                            accept="image/*"
                             required
                             ).fileUpload
                         input(

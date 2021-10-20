@@ -42,7 +42,7 @@ block content
                                 img(src="/" + video.owner.avatarUrl width="45" height="45")
                             div.creator_username_description
                                 div.creator_username
-                                    a(href=`/users/${video.owner._id}`)=video.owner.name
+                                    a(href=`/users/${video.owner._id}`)=video.owner.username
                                 div.creator_description
                                     p=video.description
                         if String(video.owner._id) === String(loggedInUser._id)
@@ -50,26 +50,39 @@ block content
                                 a(href=`${video.id}/edit`)#edit_btn 변경
                                 a(href=`${video.id}/remove`)#remove_btn 삭제
                 div.comment_body
-                    div.video_add-comments
-                        img(src="/" + loggedInUser.avatarUrl width="40" height="40")
-                        form.video_comment-form#commentForm
-                            input(id="comment" type="text" placeholder="공개 댓글 추가..." maxlength="60") 
-                            button#btn 댓글
+                    if loggedIn
+                        div.video_add-comments(data-id=loggedInUser.avatarUrl data-user=loggedInUser.username)
+                            img(src="/" + loggedInUser.avatarUrl width="40" height="40")
+                            form.video_comment-form#commentForm
+                                input(id="comment" type="text" placeholder="공개 댓글 추가...(maxlength 100!!)" maxlength="60") 
+                                button#btn 댓글
+                    else 
+                        div.video_signin_request
+                            h2 댓글로 소통하세요!
+                            a(href="/signin") 로그인
                     div.video_comments
                         each comment in video.comments.reverse()
-                            div.comment_container
+                            div.comment_container(data-id=comment._id)
                                 div.comment_left
-                                    img(src="/"+comment.ownerAvatarUrl width="40" height="40")
+                                    img(src="/"+ comment.ownerAvatarUrl width="40" height="40")
                                 div.comment_right
                                     div.comment_name_date
                                         small#ownername=comment.ownerName
                                         small#ownerdate=comment.createdAt
                                     div.comment_text
-                                        small#ownertext=comment.text
+                                        small(id="ownertext" data-id=comment._id)=comment.text
                                     div.comment_icon_box
                                         i.far.fa-thumbs-up
                                         i.far.fa-thumbs-down
-                                        i 답글
+                                        i.far.fa-comment
+                                        if String(comment.owner) === String(loggedInUser._id)
+                                            i(
+                                              class="far fa-trash-alt" 
+                                              id="deleteBtn" 
+                                              data-id=comment._id 
+                                              data-user=comment.owner
+                                              data-text=comment.text
+                                            )
             div.bottom_right
                 each info in videos 
                     +watchVideo(info)

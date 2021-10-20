@@ -34,7 +34,6 @@ export const watch = async (req, res) => {
 
 // Upload Part
 export const getUpload = (req, res) => {
-  console.log("hello", req.file);
   return res.render("upload", { pageTitle: "upload videos" });
 };
 export const postUpload = async (req, res) => {
@@ -42,17 +41,19 @@ export const postUpload = async (req, res) => {
     user: { _id },
   } = req.session;
   const { title, description, hashtags } = req.body;
-  const { path: fileUrl } = req.file;
+  const { video, thumb } = req.files;
   const createdAt = date.format(new Date(), "YYYY.MM.DD");
   try {
     const newVideo = await videoModel.create({
-      fileUrl,
+      fileUrl: video[0].path,
+      thumbUrl: thumb[0].path,
       owner: _id,
       title,
       description,
       createdAt,
       hashtags: videoModel.formatHashtags(hashtags),
     });
+    console.log(newVideo);
     const user = await userModel.findById(_id);
     user.videos.push(newVideo._id);
     user.save();
@@ -157,5 +158,24 @@ export const createComment = async (req, res) => {
   });
   video.comments.push(comment._id);
   video.save();
-  return res.status(201).json({ newCommentId: comment._id });
+  return res.status(201).json({
+    newCommentId: comment._id,
+    newCommentOwner: comment.owner,
+    newCommentText: comment.text,
+  });
+};
+
+export const removeComment = async (req, res) => {
+  const {
+    body: { commentId },
+    params: { id },
+  } = req;
+  const video = await videoModel.findById(id);
+  if (!video) {
+    return res.sendStatus(400);
+  }
+  await commentModel.findByIdAndDelete(commentId);
+  video.comments.filter((comment) => comment._id !== commentId);
+  video.save();
+  return res.sendStatus(201);
 };

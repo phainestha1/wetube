@@ -1,18 +1,15 @@
 mixin video(info)
     div.video_contents
-        div.video_thumnail
+        div.video_thumb_container
             a(href=`/videos/${info.id}`)
-                img(
-                    src="https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80"
-                    width="300"
-                    height="180"
-                    )
+                img(src="/" + info.thumbUrl)
         div.video_metadata
             div.video_profileContainer
-                img(src="/" + info.owner.avatarUrl width="35" height="35")#profile_url
+                a(href=`/users/${info.owner._id}`)
+                    img(src="/" + info.owner.avatarUrl width="35" height="35")#profile_url
             div.video_infoContainer
                 h3#video_title
                     a(href=`/videos/${info.id}`)=info.title
-                a(href=`/users/${info.owner._id}`)#video_creator=info.owner.name  
+                a(href=`/users/${info.owner._id}`)#video_creator=info.owner.username  
                 small#video_views 조회수 #{info.meta.views}회
         
