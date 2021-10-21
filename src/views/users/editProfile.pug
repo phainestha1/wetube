@@ -1,6 +1,4 @@
 div.edit_section
-    if errorMessage 
-        span=errorMessage
     div.edit_container
         div.profile_edit_avatarUrl
             img(id="avatar_image" src="/"+loggedInUser.avatarUrl width="100", height="100")
@@ -32,9 +30,8 @@ div.edit_section
                         )
                     div.update_btn 
                         button(type="submit") 변경 완료
+                div.password_change_btn
+                    a(href=`/users/${loggedInUser._id}/edit/change-password`) 비밀번호 변경
             div.error_message_container    
                 if !loggedInUser.socialOnly
                     hr
-div.password_change_btn
-    a(href=`/users/${loggedInUser._id}/edit/change-password`)
-        button 비밀번호 변경

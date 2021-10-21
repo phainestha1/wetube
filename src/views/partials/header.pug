@@ -85,9 +85,10 @@ header
             i.fab.fa-youtube
             h3 NomadTube
     div.search_container
-        input(type="text" placeholder="Search")#search_bar
-        a(href="/search")#search_icon
-            i.fas.fa-search
+        form(method="get").search_form
+            input(name="search" type="text" placeholder="검색")#search_bar
+            button(type="submit")#search_icon
+                i.fas.fa-search
         button#search_mic 
             i.fas.fa-microphone
     nav.nav_container

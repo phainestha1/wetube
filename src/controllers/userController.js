@@ -195,15 +195,11 @@ export const postEdit = async (req, res) => {
         { new: true }
       );
       req.session.user = updatedUsername;
-      return res.render("users/editProfile", {
-        pageTitle: "Edit Profile",
-        errorMessage: "Username was updated.",
-      });
+      req.flash("info", "프로필이 변경되었습니다.");
+      return res.redirect(`/users/${id}`);
     }
-    return res.status(400).render("users/editProfile", {
-      pageTitle: "Edit Profile",
-      errorMessage: "Username is already taken",
-    });
+    req.flash("error", "이미 등록된 이름입니다.");
+    return res.status(400).redirect(`/users/${id}`);
   } else if (emailExists) {
     if (req.session.user.email === newEmail) {
       const updatedEmail = await userModel.findByIdAndUpdate(
@@ -217,15 +213,11 @@ export const postEdit = async (req, res) => {
         { new: true }
       );
       req.session.user = updatedEmail;
-      return res.render("users/editProfile", {
-        pageTitle: "Edit Profile",
-        errorMessage: "Email was updated.",
-      });
+      req.flash("info", "프로필이 변경되었습니다.");
+      return res.redirect(`/users/${id}`);
     }
-    return res.status(400).render("users/editProfile", {
-      pageTitle: "Edit Profile",
-      errorMessage: "Email is already taken",
-    });
+    req.flash("error", "이미 등록된 이메일입니다.");
+    return res.sendStatus(400).redirect(`/users/${id}`);
   }
 
   const updatedUser = await userModel.findByIdAndUpdate(
@@ -240,6 +232,7 @@ export const postEdit = async (req, res) => {
     { new: true }
   );
   req.session.user = updatedUser;
+  req.flash("info", "프로필이 변경되었습니다.");
   return res.redirect(`/users/${id}`);
 };
 

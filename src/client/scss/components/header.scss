@@ -10,7 +10,7 @@ header {
 
   .logo_container {
     display: flex;
-    flex: 0.3;
+    flex: 0.2;
 
     .modal_showing {
       font-size: 20px;
@@ -40,13 +40,18 @@ header {
   }
   .search_container {
     display: flex;
-    flex: 0.4;
+    flex: 0.6;
     flex-direction: row;
     align-items: center;
-
+    justify-content: center;
+    .search_form {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+    }
     #search_bar {
-      width: 38vw;
-      height: 90%;
+      width: 540px;
+      height: 37px;
       padding: 0 8px;
       background-color: #121212;
       border: 1px solid #292929;
@@ -58,7 +63,15 @@ header {
 
     #search_icon {
       background-color: #323232;
+      border: none;
       padding: 8px 20px;
+      width: 64px;
+      height: 40px;
+      cursor: pointer;
+      i {
+        color: white;
+        font-size: 17px;
+      }
     }
     #search_mic {
       color: white;
@@ -74,7 +87,7 @@ header {
 
   .nav_container {
     display: flex;
-    flex: 0.3;
+    flex: 0.2;
     flex-direction: row;
     align-items: center;
     justify-content: right;

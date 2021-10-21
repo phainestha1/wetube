@@ -27,6 +27,9 @@
         display: flex;
         flex-direction: column;
         margin-right: 300px;
+        .fas.fa-camera {
+          margin: 10px 0;
+        }
       }
       input {
         color: white;
@@ -52,15 +55,16 @@
   }
 }
 .password_change_btn {
-  button {
-    padding: 12px 15px;
-    width: 110px;
-    color: black;
+  width: 200px;
+  margin-left: 8px;
+  a {
+    padding: 12.5px 20px;
     border: none;
     border-radius: 3px;
     background-color: #3da6ff;
     cursor: pointer;
-    margin: 50px 80px 0 0;
+    color: black;
+    font-size: 13px;
   }
 }
 .update_btn {

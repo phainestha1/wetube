@@ -6,8 +6,24 @@ import date from "date-and-time";
 // Controllers
 // Main Page: Home & Watch a Video
 export const home = async (req, res) => {
+  let videos;
+  const { search } = req.query;
+  // Search
+  if (search) {
+    videos = [];
+    const searchResults = await videoModel
+      .find({
+        title: {
+          $regex: new RegExp(search, "i"),
+        },
+      })
+      .populate("owner");
+    return res.render("home", { pageTitle: "Home", searchResults });
+  }
+
+  // Home Main Page
   try {
-    const videos = await videoModel
+    videos = await videoModel
       .find({})
       .sort({ createdAt: "desc" })
       .populate("owner");
@@ -57,6 +73,7 @@ export const postUpload = async (req, res) => {
     const user = await userModel.findById(_id);
     user.videos.push(newVideo._id);
     user.save();
+    req.flash("info", `"${title}" 영상이 업로드 되었습니다.`);
     return res.redirect("/");
   } catch (error) {
     return res.status(400).render("upload", {
@@ -94,6 +111,7 @@ export const postEdit = async (req, res) => {
     description,
     hashtags: videoModel.formatHashtags(hashtags),
   });
+  req.flash("info", `"${title}" 영상이 변경 되었습니다.`);
   return res.redirect(`/videos/${id}`);
 };
 
@@ -108,6 +126,7 @@ export const remove = async (req, res) => {
     return res.status(403).redirect("/");
   }
   await videoModel.findByIdAndDelete(id);
+  req.flash("info", `영상이 삭제 되었습니다.`);
   return res.redirect("/");
 };
 

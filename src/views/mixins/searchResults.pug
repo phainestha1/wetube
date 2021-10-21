@@ -1,0 +1,19 @@
+mixin searchResults(info)
+    div.video_contents
+        div.video_thumb_container
+            a(href=`/videos/${info.id}`)
+                img(src="/" + info.thumbUrl)
+        div.video_metadata
+            div.video_infoContainer
+                h3#video_title
+                    a(href=`/videos/${info.id}`)=info.title
+                small#video_views 조회수 #{info.meta.views}회 •
+                small#video_createdAt=info.createdAt
+            div.video_profileContainer
+                div.video_creator_info
+                    a(href=`/users/${info.owner._id}`)
+                        img(src="/" + info.owner.avatarUrl width="25" height="25")#profile_url
+                    a(href=`/users/${info.owner._id}`)#video_creator=info.owner.username
+                div.video_description
+                    span=info.description  
+        
