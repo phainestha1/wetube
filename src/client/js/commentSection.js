@@ -32,7 +32,7 @@ const addComment = (
   const commentLeft = document.createElement("div");
   const userAvatar = document.createElement("img");
   commentLeft.className = "comment_left";
-  userAvatar.src = `/${userAvatarUrl}`;
+  userAvatar.src = userAvatarUrl;
   userAvatar.width = 40;
   userAvatar.height = 40;
   commentLeft.appendChild(userAvatar);
