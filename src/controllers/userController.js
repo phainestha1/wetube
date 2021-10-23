@@ -49,8 +49,6 @@ export const getSignin = (req, res) => {
 export const postSignin = async (req, res) => {
   const { username, password } = req.body;
   const user = await userModel.findOne({ username, socialOnly: false });
-  console.log(username);
-  console.log(password);
   if (!user) {
     req.flash("error", "등록되지 않은 계정입니다.");
     return res.status(400).redirect("/signin");
@@ -63,12 +61,13 @@ export const postSignin = async (req, res) => {
   }
   req.session.loggedIn = true;
   req.session.user = user;
-  console.log(req.session.user);
   res.redirect("/");
 };
 
 // Github Sign In
 export const startGithubSignin = (req, res) => {
+  console.log("깃허브 스타트 시작");
+  console.log(process.env.GH_SECRET);
   const baseUrl = "https://github.com/login/oauth/authorize";
   const config = {
     client_id: process.env.GH_CLIENT,
@@ -80,6 +79,7 @@ export const startGithubSignin = (req, res) => {
   return res.redirect(finalUrl);
 };
 export const finishGithubSignin = async (req, res) => {
+  console.log("피니쉬 부분 들어옴");
   const baseUrl = "https://github.com/login/oauth/access_token";
   const config = {
     client_id: process.env.GH_CLIENT,

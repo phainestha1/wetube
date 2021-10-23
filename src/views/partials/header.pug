@@ -100,10 +100,7 @@ header
             a(href="/")#notification
                 i.far.fa-bell
             a(href=`/users/${loggedInUser._id}`)
-                if loggedInUser.socialOnly
-                    img(src=loggedInUser.avatarUrl).header_profileImage 
-                else
-                    img(src="/" + loggedInUser.avatarUrl).header_profileImage 
+                img(src="/" + loggedInUser.avatarUrl).header_profileImage 
         else 
             a(href="/signin")#signIn
                 i.far.fa-user-circle 
