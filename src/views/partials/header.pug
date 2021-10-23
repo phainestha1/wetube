@@ -105,7 +105,7 @@ header
                 else if !loggedInUser.avartarUrl
                     img(src="https://i.stack.imgur.com/l60Hf.png").header_profileImage 
                 else
-                    img(src="/" + loggedInUser.avatarUrl).header_profileImage 
+                    img(src=loggedInUser.avatarUrl).header_profileImage 
         else 
             a(href="/signin")#signIn
                 i.far.fa-user-circle 

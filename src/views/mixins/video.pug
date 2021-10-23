@@ -2,11 +2,16 @@ mixin video(info)
     div.video_contents
         div.video_thumb_container
             a(href=`/videos/${info.id}`)
-                img(src="/" + info.thumbUrl)
+                img(src=info.thumbUrl)
         div.video_metadata
             div.video_profileContainer
                 a(href=`/users/${info.owner._id}`)
-                    img(src="/" + info.owner.avatarUrl width="35" height="35")#profile_url
+                    if loggedInUser.socialOnly
+                        img(src=loggedInUser.avatarUrl width="35", height="35")#profile_url
+                    else if !loggedInUser.avartarUrl
+                        img(src="https://i.stack.imgur.com/l60Hf.png" width="35", height="35")#profile_url
+                    else
+                        img(src=loggedInUser.avatarUrl width="35", height="35")#profile_url 
             div.video_infoContainer
                 h3#video_title
                     a(href=`/videos/${info.id}`)=info.title

@@ -2,7 +2,7 @@ mixin watchVideo(info)
     a(href=`/videos/${info.id}`).video_watch_contents
         div.video_thumnail
             img(
-                src="/" + info.thumbUrl
+                src=info.thumbUrl
                 width="168"
                 height="94" 
                )
