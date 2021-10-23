@@ -32,6 +32,8 @@ div.edit_section
                         button(type="submit") 변경 완료
                 div.password_change_btn
                     a(href=`/users/${loggedInUser._id}/edit/change-password`) 비밀번호 변경
+                div.password_change_btn
+                    a(href=`/users/${loggedInUser._id}/remove`) 탈퇴하기
             div.error_message_container    
                 if !loggedInUser.socialOnly
                     hr

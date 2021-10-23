@@ -16,6 +16,9 @@ main {
     height: 56px;
     border-top: 1px solid #373737;
     border-bottom: 1px solid #373737;
+    position: sticky;
+    top: 60px;
+    z-index: 9800;
 
     .left_arrow_container,
     .right_arrow_container {

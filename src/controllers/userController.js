@@ -1,5 +1,4 @@
 import userModel from "../model/userModel";
-import videoModel from "../model/videoModel";
 import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
@@ -45,28 +44,23 @@ export const postSignup = async (req, res) => {
 
 // Sign In
 export const getSignin = (req, res) => {
-  return res.render("users/signin", { pageTitle: "Sign In" });
+  return res.render("users/signin", { pageTitle: "로그인" });
 };
 export const postSignin = async (req, res) => {
   const { username, password } = req.body;
-  const pageTitle = "Sign In";
   const user = await userModel.findOne({ username, socialOnly: false });
-  const pwVerification = await bcrypt.compare(password, user.password);
-
+  console.log(username);
+  console.log(password);
   if (!user) {
-    return res.status(400).render("users/signin", {
-      pageTitle,
-      errorMessage: "Username does not exists.",
-    });
+    req.flash("error", "등록되지 않은 계정입니다.");
+    return res.status(400).redirect("/signin");
+  } else {
+    const pwVerification = await bcrypt.compare(password, user.password);
+    if (!pwVerification) {
+      req.flash("error", "비밀번호가 일치하지 않습니다.");
+      return res.status(400).redirect("/signin");
+    }
   }
-
-  if (!pwVerification) {
-    return res.status(400).render("users/signin", {
-      pageTitle,
-      errorMessage: "Wrong Password",
-    });
-  }
-
   req.session.loggedIn = true;
   req.session.user = user;
   console.log(req.session.user);
@@ -160,7 +154,8 @@ export const profile = async (req, res) => {
   const user = await userModel.findById(id).populate("videos");
   console.log(id);
   if (!user) {
-    return res.status(404).render("404", { pageTitle: "User not found" });
+    req.flash("error", "먼저 로그인 하세요.");
+    return res.status(404).redirect("/");
   }
   return res.render("users/profile", {
     pageTitle: user.name,
@@ -275,4 +270,15 @@ export const postChangePassword = async (req, res) => {
   return res.redirect("/users/signout");
 };
 
-export const remove = (req, res) => {};
+export const remove = async (req, res) => {
+  const {
+    user: { _id: id },
+  } = req.session;
+  const user = await userModel.findByIdAndDelete(id);
+  console.log(user);
+  req.session.user = null;
+  res.locals.loggedInUser = req.session.user;
+  req.session.loggedIn = false;
+  req.flash("info", "바이바이!");
+  return res.redirect("/");
+};

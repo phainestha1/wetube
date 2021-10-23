@@ -1,25 +1,35 @@
 extends templates/base
 
 block content
-    h4 Update Video
-    form(method="post")
-        input(
-            name="title" 
-            type="text" 
-            value=video.title 
-            placeholder="Update your video title" 
-            required
-            )
-        input(
-            name="description" 
-            type="text" 
-            value=video.description 
-            placeholder="Update your video description"
-            )
-        input(
-            name="hashtags" 
-            type="text" 
-            value=video.hashtags.join() 
-            placeholder="Update your video hashtags"
-            )
-        button(type="submit") Update
+    div.edit_form_container
+        form(method="post" enctype="multipart/form-data")
+            h4 영상 업데이트
+            label(for="thumb")
+                i.far.fa-image 
+                span 썸네일 변경
+            input(
+                name="thumb" 
+                id="thumb" 
+                type="file" 
+                accept="image/*"
+                ).fileUpdate
+            input(
+                name="title" 
+                type="text" 
+                value=video.title 
+                placeholder="제목" 
+                required
+                )
+            input(
+                name="description" 
+                type="text" 
+                value=video.description 
+                placeholder="설명"
+                )
+            input(
+                name="hashtags" 
+                type="text" 
+                value=video.hashtags.join() 
+                placeholder="해쉬 태그"
+                )
+            button(type="submit") 변경하기

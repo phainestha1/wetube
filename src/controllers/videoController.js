@@ -99,11 +99,12 @@ export const getEdit = async (req, res) => {
 export const postEdit = async (req, res) => {
   const { id } = req.params;
   const { title, description, hashtags } = req.body;
-  const video = await videoModel.exists({ _id: id });
+  const video = await videoModel.findById(id);
   if (!video) {
-    return res.status(404).render("404");
+    return res.sendStatus(404);
   }
   if (String(video.owner) !== String(req.session.user._id)) {
+    req.flash("error", "Error!!");
     return res.status(403).redirect("/");
   }
   await videoModel.findByIdAndUpdate(id, {
@@ -111,6 +112,12 @@ export const postEdit = async (req, res) => {
     description,
     hashtags: videoModel.formatHashtags(hashtags),
   });
+  if (req.file) {
+    const { path } = req.file;
+    await videoModel.findByIdAndUpdate(id, {
+      thumbUrl: path,
+    });
+  }
   req.flash("info", `"${title}" 영상이 변경 되었습니다.`);
   return res.redirect(`/videos/${id}`);
 };

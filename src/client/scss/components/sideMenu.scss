@@ -12,6 +12,8 @@ sideMenu {
     width: 6.5vw;
     max-width: 73px;
     text-align: center;
+    position: sticky;
+    top: 75px;
 
     a {
       display: flex;

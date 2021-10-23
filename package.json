@@ -23,7 +23,8 @@
     "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.5",
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
     "@babel/node": "^7.15.4",
     "@babel/preset-env": "^7.15.6",
     "babel-loader": "^8.2.2",
@@ -38,8 +39,12 @@
     "webpack-node-externals": "^3.0.0"
   },
   "scripts": {
-    "dev": "nodemon",
-    "assets": "webpack"
+    "start": "node build/init.js",
+    "build": "npm run build:server && npm run build:assets",
+    "build:server": "babel src -d build",
+    "build:assets": "webpack --mode=production",
+    "dev:server": "nodemon",
+    "dev:assets": "webpack --mode=development -w"
   },
   "author": "Lee",
   "license": "ISC"
