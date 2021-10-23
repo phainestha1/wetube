@@ -137,7 +137,7 @@ const deleteCommentBox = () => {
 
 const handleCommentDelete = async (event) => {
   const videoId = videoContainer.dataset.id;
-  const { id: commentId, user, text } = event.target.dataset;
+  const { id: commentId } = event.target.dataset;
   const response = await fetch(`/api/videos/comments/${videoId}/delete`, {
     method: "DELETE",
     headers: {

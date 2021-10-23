@@ -9,10 +9,18 @@ const s3 = new aws.S3({
   },
 });
 
-const multerUploder = multerS3({
+const isHeroku = process.env.NODE_ENV === "production";
+
+const s3ImageUploader = multerS3({
   s3: s3,
-  bucket: "lee-youtube-clone",
+  bucket: "lee-youtube-clone/images",
   acl: "public-read",
+});
+const s3Videoloader = multerS3({
+  s3: s3,
+  bucket: "lee-youtube-clone/videos",
+  acl: "public-read",
+  contentType: multerS3.AUTO_CONTENT_TYPE,
 });
 
 export const localsMiddleware = (req, res, next) => {
@@ -42,9 +50,9 @@ export const publicOnlyMiddleware = (req, res, next) => {
 
 export const avatarUpload = multer({
   dest: "uploads/avatars/",
-  storage: multerUploder,
+  storage: isHeroku ? s3ImageUploader : undefined,
 });
 export const videoUploads = multer({
   dest: "uploads/videos/",
-  storage: multerUploder,
+  storage: isHeroku ? s3Videoloader : undefined,
 });

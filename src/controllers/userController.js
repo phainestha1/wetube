@@ -214,11 +214,11 @@ export const postEdit = async (req, res) => {
     req.flash("error", "이미 등록된 이메일입니다.");
     return res.sendStatus(400).redirect(`/users/${id}`);
   }
-
+  const isHeroku = process.env.NODE_ENV === "production";
   const updatedUser = await userModel.findByIdAndUpdate(
     id,
     {
-      avatarUrl: file ? file.path : avatarUrl,
+      avatarUrl: file ? (isHeroku ? file.location : file.path) : avatarUrl,
       username: newUsername,
       email: newEmail,
       name: newName,
