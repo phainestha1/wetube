@@ -100,7 +100,12 @@ header
             a(href="/")#notification
                 i.far.fa-bell
             a(href=`/users/${loggedInUser._id}`)
-                img(src="/" + loggedInUser.avatarUrl).header_profileImage 
+                if loggedInUser.socialOnly
+                    img(src=loggedInUser.avatarUrl).header_profileImage 
+                else if !loggedInUser.avartarUrl
+                    img(src="https://i.stack.imgur.com/l60Hf.png").header_profileImage 
+                else
+                    img(src="/" + loggedInUser.avatarUrl).header_profileImage 
         else 
             a(href="/signin")#signIn
                 i.far.fa-user-circle 
