@@ -6,12 +6,10 @@ mixin video(info)
         div.video_metadata
             div.video_profileContainer
                 a(href=`/users/${info.owner._id}`)
-                    if loggedInUser.socialOnly
-                        img(src=loggedInUser.avatarUrl width="35", height="35")#profile_url
-                    else if !loggedInUser.avartarUrl
-                        img(src="https://i.stack.imgur.com/l60Hf.png" width="35", height="35")#profile_url
-                    else
-                        img(src=loggedInUser.avatarUrl width="35", height="35")#profile_url 
+                    img(src=info.owner.avatarUrl ? info.owner.avatarUrl : "https://i.stack.imgur.com/l60Hf.png"
+                        width="35", 
+                        height="35"
+                        )#profile_url
             div.video_infoContainer
                 h3#video_title
                     a(href=`/videos/${info.id}`)=info.title

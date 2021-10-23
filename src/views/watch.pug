@@ -6,7 +6,7 @@ block content
         div.watch_body
             div.watch_section
                 div.video_container(data-id=video._id)
-                    video(src="/"+video.fileUrl)
+                    video(src=video.fileUrl)
                     div.video_controls
                         div.video_timeline
                             input(type="range" id="timeLine" min="0" step="1" value=0)
@@ -39,7 +39,9 @@ block content
                     div.creator_section
                         div.creator_info
                             div.creator_avatar
-                                img(src="/" + video.owner.avatarUrl width="45" height="45")
+                                img(src=video.owner.avatarUrl ? video.owner.avatarUrl : "https://i.stack.imgur.com/l60Hf.png"
+                                    width="45" 
+                                    height="45")
                             div.creator_username_description
                                 div.creator_username
                                     a(href=`/users/${video.owner._id}`)=video.owner.username
@@ -52,7 +54,10 @@ block content
                 div.comment_body
                     if loggedIn
                         div.video_add-comments(data-id=loggedInUser.avatarUrl data-user=loggedInUser.username)
-                            img(src="/" + loggedInUser.avatarUrl width="40" height="40")
+                            img(src=loggedInUser.avatarUrl ? loggedInUser.avatarUrl : "https://i.stack.imgur.com/l60Hf.png"
+                                width="40" 
+                                height="40"
+                                )
                             form.video_comment-form#commentForm
                                 input(id="comment" type="text" placeholder="공개 댓글 추가...(maxlength 100!!)" maxlength="60") 
                                 button#btn 댓글
@@ -64,7 +69,8 @@ block content
                         each comment in video.comments.reverse()
                             div.comment_container(data-id=comment._id)
                                 div.comment_left
-                                    img(src="/"+ comment.ownerAvatarUrl width="40" height="40")
+                                    img(src=comment.ownerAvatarUrl ? comment.ownerAvatarUrl : "https://i.stack.imgur.com/l60Hf.png"
+                                        width="40" height="40")
                                 div.comment_right
                                     div.comment_name_date
                                         small#ownername=comment.ownerName
