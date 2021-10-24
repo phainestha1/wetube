@@ -5,8 +5,9 @@ block content
     div.sidebar
         include ../partials/sideMenu
     div.profile_container
-        div.user_info
-            include editProfile
+        if String(user._id) === String(loggedInUser._id)
+            div.user_info
+                include editProfile
         div.user_videos
             div.upload_message
                 h3 업로드한 동영상
