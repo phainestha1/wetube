@@ -3,8 +3,12 @@ import regeneratorRuntime from "regenerator-runtime/runtime";
 const videoContainer = document.querySelector(".video_container");
 const videoAddComments = document.querySelector(".video_add-comments");
 const form = document.getElementById("commentForm");
+const videoId = videoContainer.dataset.id;
 let deleteBtn = document.querySelectorAll("#deleteBtn");
+let likeBtn = document.querySelectorAll("#likeBtn");
+let dislikeBtn = document.querySelectorAll("#dislikeBtn");
 
+// Comment Creation and Removal
 const handleDeleteBtn = () => {
   for (let i = 0; i < deleteBtn.length; i++) {
     deleteBtn[i].addEventListener("click", handleCommentDelete);
@@ -18,7 +22,9 @@ const addComment = (
   userAvatarUrl,
   newCommentId,
   newCommentOwner,
-  newCommentText
+  newCommentText,
+  likeCount,
+  dislikeCount
 ) => {
   // Container the new comment should be placed in.
   const videoComments = document.querySelector(".video_comments");
@@ -26,6 +32,7 @@ const addComment = (
   // Comment Container and its class name.
   const commentContaienr = document.createElement("div");
   commentContaienr.className = "comment_container";
+  commentContaienr.id = newCommentId;
   commentContaienr.dataset.id = newCommentId;
 
   // Left Section with user avatar
@@ -68,6 +75,8 @@ const addComment = (
   const dislikeIcon = document.createElement("i");
   const reCommentIcon = document.createElement("i");
   const deleteIcon = document.createElement("i");
+  const likeCounter = document.createElement("small");
+  const dislikeCounter = document.createElement("small");
   likeIcon.className = "far fa-thumbs-up";
   dislikeIcon.className = "far fa-thumbs-down";
   deleteIcon.className = "far fa-trash-alt";
@@ -76,8 +85,16 @@ const addComment = (
   deleteIcon.dataset.user = newCommentOwner;
   deleteIcon.dataset.text = newCommentText;
   reCommentIcon.className = "far fa-comment";
+  likeCounter.className = "likeCount";
+  dislikeCounter.className = "dislikeCount";
+  likeCounter.innerText = likeCount;
+  dislikeCounter.innerText = dislikeCount;
+  likeCounter.id = `like_${newCommentId}`;
+  dislikeCounter.id = `dislike_${newCommentId}`;
   iconBox.appendChild(likeIcon);
+  iconBox.appendChild(likeCounter);
   iconBox.appendChild(dislikeIcon);
+  iconBox.appendChild(dislikeCounter);
   iconBox.appendChild(reCommentIcon);
   iconBox.appendChild(deleteIcon);
 
@@ -89,7 +106,12 @@ const addComment = (
   videoComments.prepend(commentContaienr);
 
   deleteBtn = [deleteIcon, ...deleteBtn];
+  likeBtn = [likeIcon, ...likeBtn];
+  dislikeBtn = [dislikeIcon, ...dislikeBtn];
   handleDeleteBtn();
+  handleLikeBtn();
+  handleDislikeBtn();
+  console.log(likeBtn);
 };
 
 const handleSubmit = async (event) => {
@@ -116,8 +138,13 @@ const handleSubmit = async (event) => {
   });
   if (response.status === 201) {
     input.value = "";
-    const { newCommentId, newCommentOwner, newCommentText } =
-      await response.json();
+    const {
+      newCommentId,
+      newCommentOwner,
+      newCommentText,
+      likeCount,
+      dislikeCount,
+    } = await response.json();
     addComment(
       text,
       userName,
@@ -125,18 +152,19 @@ const handleSubmit = async (event) => {
       userAvatarUrl,
       newCommentId,
       newCommentOwner,
-      newCommentText
+      newCommentText,
+      likeCount,
+      dislikeCount
     );
   }
 };
 
-const deleteCommentBox = () => {
-  const commentContainer = document.querySelector(".comment_container");
+const deleteCommentBox = (commentId) => {
+  const commentContainer = document.getElementById(commentId);
   commentContainer.remove();
 };
 
 const handleCommentDelete = async (event) => {
-  const videoId = videoContainer.dataset.id;
   const { id: commentId } = event.target.dataset;
   const response = await fetch(`/api/videos/comments/${videoId}/delete`, {
     method: "DELETE",
@@ -147,11 +175,72 @@ const handleCommentDelete = async (event) => {
   });
 
   if (response.status === 201) {
-    deleteCommentBox();
+    deleteCommentBox(commentId);
   }
 };
 
+// Likes and Dislikes
+// Likes
+const likeCountUp = (likeBtnId, likeCount) => {
+  let likeCounter = document.getElementById(`like_${likeBtnId}`);
+  likeCounter.innerText = likeCount;
+};
+
+const handleLikeFunction = async (event) => {
+  event.preventDefault();
+  const { id: likeBtnId } = event.target.dataset;
+  const response = await fetch(`/api/videos/comments/${videoId}/like`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ likeBtnId }),
+  });
+
+  if (response.status === 201) {
+    const { likeCount } = await response.json();
+    likeCountUp(likeBtnId, likeCount);
+  }
+};
+
+const handleLikeBtn = () => {
+  for (let i = 0; i < likeBtn.length; i++) {
+    likeBtn[i].addEventListener("click", handleLikeFunction);
+  }
+};
+
+//Dislikes
+const dislikeCountUp = (dislikeBtnId, dislikeCount) => {
+  let dislikeCounter = document.getElementById(`dislike_${dislikeBtnId}`);
+  dislikeCounter.innerText = dislikeCount;
+};
+
+const handleDislikeFunction = async (event) => {
+  event.preventDefault();
+  const { id: dislikeBtnId } = event.target.dataset;
+  const response = await fetch(`/api/videos/comments/${videoId}/dislike`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ dislikeBtnId }),
+  });
+
+  if (response.status === 201) {
+    const { dislikeCount } = await response.json();
+    dislikeCountUp(dislikeBtnId, dislikeCount);
+  }
+};
+const handleDislikeBtn = () => {
+  for (let i = 0; i < dislikeBtn.length; i++) {
+    dislikeBtn[i].addEventListener("click", handleDislikeFunction);
+  }
+};
+
+// Event Listeners
 if (form) {
   form.addEventListener("submit", handleSubmit);
 }
 handleDeleteBtn();
+handleLikeBtn();
+handleDislikeBtn();

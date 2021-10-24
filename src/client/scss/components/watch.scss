@@ -299,7 +299,7 @@
   i {
     color: #aaaaaa;
     font-size: 14px;
-    margin: 10px 20px 0 0;
+    margin: 10px 5px 0 0;
     cursor: pointer;
     border-radius: 999px;
     padding: 5px;
@@ -307,6 +307,12 @@
       color: black;
       background-color: #c4c3c3;
     }
+  }
+  .dislikeCount,
+  .likeCount {
+    font-size: 13px;
+    padding-right: 5px;
+    color: #aaaaaa;
   }
 }
 .video_signin_request {

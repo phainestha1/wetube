@@ -66,8 +66,6 @@ export const postSignin = async (req, res) => {
 
 // Github Sign In
 export const startGithubSignin = (req, res) => {
-  console.log("깃허브 스타트 시작");
-  console.log(process.env.GH_SECRET);
   const baseUrl = "https://github.com/login/oauth/authorize";
   const config = {
     client_id: process.env.GH_CLIENT,
@@ -79,7 +77,6 @@ export const startGithubSignin = (req, res) => {
   return res.redirect(finalUrl);
 };
 export const finishGithubSignin = async (req, res) => {
-  console.log("피니쉬 부분 들어옴");
   const baseUrl = "https://github.com/login/oauth/access_token";
   const config = {
     client_id: process.env.GH_CLIENT,
@@ -139,7 +136,78 @@ export const finishGithubSignin = async (req, res) => {
   }
 };
 
+// Kakao Sign In
+export const startKakaoSignin = (req, res) => {
+  const baseUrl = "https://kauth.kakao.com/oauth/authorize";
+  const config = {
+    client_id: process.env.KK_RESTAPIKEY,
+    redirect_uri: process.env.KK_REDIRECTURI,
+    response_type: "code",
+    prompt: "login",
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+  return res.redirect(finalUrl);
+};
+
+export const finishKakaoSignin = async (req, res) => {
+  const { code } = req.query;
+  const baseUrl = "https://kauth.kakao.com/oauth/token";
+  const config = {
+    grant_type: "authorization_code",
+    client_id: process.env.KK_RESTAPIKEY,
+    redirect_uri: process.env.KK_REDIRECTURI,
+    code,
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+  const tokenRequest = await (
+    await fetch(finalUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+  ).json();
+
+  if ("access_token" in tokenRequest) {
+    const { access_token } = tokenRequest;
+    const apiUrl = "https://kapi.kakao.com";
+    const userData = await (
+      await fetch(`${apiUrl}/v2/user/me`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          property_keys: [
+            "properties.nickname",
+            "properties.profile_image",
+            "kakao_account.email",
+          ],
+        },
+      })
+    ).json();
+
+    let user = await userModel.findOne({ email: userData.id });
+    if (!user) {
+      user = await userModel.create({
+        avatarUrl: userData.properties.profile_image,
+        username: userData.properties.nickname,
+        name: userData.properties.nickname,
+        email: userData.id,
+        password: "",
+        socialOnly: true,
+        location: "",
+      });
+    }
+    req.session.loggedIn = true;
+    req.session.user = user;
+    return res.redirect("/");
+  } else {
+    return res.redirect("/signin");
+  }
+};
+
 // Sign Out
+
 export const signout = (req, res) => {
   req.flash("info", "로그아웃 되었습니다.");
   req.session.user = null;
@@ -175,14 +243,14 @@ export const postEdit = async (req, res) => {
   } = req;
   const usernameExists = await userModel.exists({ username: newUsername });
   const emailExists = await userModel.exists({ email: newEmail });
-
+  const isHeroku = process.env.NODE_ENV === "production";
   // Edited Username and Email Verification
   if (usernameExists) {
     if (req.session.user.username === newUsername) {
       const updatedUsername = await userModel.findByIdAndUpdate(
         id,
         {
-          avatarUrl: file ? file.location : avatarUrl,
+          avatarUrl: file ? (isHeroku ? file.location : file.path) : avatarUrl,
           username: newUsername,
           name: newName,
           location: newLocation,
@@ -200,7 +268,7 @@ export const postEdit = async (req, res) => {
       const updatedEmail = await userModel.findByIdAndUpdate(
         id,
         {
-          avatarUrl: file ? file.location : avatarUrl,
+          avatarUrl: file ? (isHeroku ? file.location : file.path) : avatarUrl,
           email: newEmail,
           name: newName,
           location: newLocation,
@@ -214,7 +282,7 @@ export const postEdit = async (req, res) => {
     req.flash("error", "이미 등록된 이메일입니다.");
     return res.sendStatus(400).redirect(`/users/${id}`);
   }
-  const isHeroku = process.env.NODE_ENV === "production";
+
   const updatedUser = await userModel.findByIdAndUpdate(
     id,
     {

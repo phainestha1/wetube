@@ -189,6 +189,8 @@ export const createComment = async (req, res) => {
     newCommentId: comment._id,
     newCommentOwner: comment.owner,
     newCommentText: comment.text,
+    likeCount: comment.likes.length,
+    dislikeCount: comment.dislikes.length,
   });
 };
 
@@ -202,7 +204,61 @@ export const removeComment = async (req, res) => {
     return res.sendStatus(400);
   }
   await commentModel.findByIdAndDelete(commentId);
-  video.comments.filter((comment) => comment._id !== commentId);
   video.save();
   return res.sendStatus(201);
+};
+
+export const videoLike = async (req, res) => {
+  const {
+    session: { user },
+    body: { likeBtnId },
+    params: { id },
+  } = req;
+  const video = await videoModel.findById(id);
+  const comment = await commentModel.findById(likeBtnId);
+  if (!video) {
+    return res.sendStatus(400);
+  } else if (!comment) {
+    return res.sendStatus(400);
+  }
+  if (!comment.likes.find((element) => element === user._id)) {
+    comment.likes.push(user._id);
+    comment.save();
+    return res.status(201).json({
+      likeCount: comment.likes.length,
+    });
+  }
+  const filterResult = comment.likes.filter((ele) => ele !== user._id);
+  comment.likes = filterResult;
+  comment.save();
+  return res.status(201).json({
+    likeCount: comment.likes.length,
+  });
+};
+export const videoDislike = async (req, res) => {
+  const {
+    session: { user },
+    body: { dislikeBtnId },
+    params: { id },
+  } = req;
+  const video = await videoModel.findById(id);
+  const comment = await commentModel.findById(dislikeBtnId);
+  if (!video) {
+    return res.sendStatus(400);
+  } else if (!comment) {
+    return res.sendStatus(400);
+  }
+  if (!comment.dislikes.find((element) => element === user._id)) {
+    comment.dislikes.push(user._id);
+    comment.save();
+    return res.status(201).json({
+      dislikeCount: comment.dislikes.length,
+    });
+  }
+  const filterResult = comment.dislikes.filter((ele) => ele !== user._id);
+  comment.dislikes = filterResult;
+  comment.save();
+  return res.status(201).json({
+    dislikeCount: comment.dislikes.length,
+  });
 };

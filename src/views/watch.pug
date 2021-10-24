@@ -67,7 +67,7 @@ block content
                             a(href="/signin") 로그인
                     div.video_comments
                         each comment in video.comments.reverse()
-                            div.comment_container(data-id=comment._id)
+                            div.comment_container(id=comment._id data-id=comment._id)
                                 div.comment_left
                                     img(src=comment.ownerAvatarUrl ? comment.ownerAvatarUrl : "https://i.stack.imgur.com/l60Hf.png"
                                         width="40" height="40")
@@ -78,16 +78,16 @@ block content
                                     div.comment_text
                                         small(id="ownertext" data-id=comment._id)=comment.text
                                     div.comment_icon_box
-                                        i.far.fa-thumbs-up
-                                        i.far.fa-thumbs-down
+                                        i(class="far fa-thumbs-up" id="likeBtn" data-id=comment._id)
+                                        small(class="likeCount" id=`like_${comment._id}`)=comment.likes.length
+                                        i(class="far fa-thumbs-down" id="dislikeBtn" data-id=comment._id)
+                                        small(class="dislikeCount" id=`dislike_${comment._id}`)=comment.dislikes.length
                                         i.far.fa-comment
                                         if String(comment.owner) === String(loggedInUser._id)
                                             i(
                                               class="far fa-trash-alt" 
                                               id="deleteBtn" 
                                               data-id=comment._id 
-                                              data-user=comment.owner
-                                              data-text=comment.text
                                             )
             div.bottom_right
                 each info in videos 

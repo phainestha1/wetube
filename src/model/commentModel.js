@@ -15,6 +15,8 @@ const commentSchema = new mongoose.Schema({
     ref: "videoModel",
   },
   createdAt: { type: String, required: true, default: Date.now },
+  likes: [],
+  dislikes: [],
 });
 
 const commentModel = mongoose.model("commentModel", commentSchema);

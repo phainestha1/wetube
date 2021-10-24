@@ -6,8 +6,10 @@ import {
   remove,
   startGithubSignin,
   finishGithubSignin,
+  startKakaoSignin,
   getChangePassword,
   postChangePassword,
+  finishKakaoSignin,
 } from "../controllers/userController";
 import {
   avatarUpload,
@@ -19,6 +21,8 @@ const userRouter = express.Router();
 
 userRouter.get("/github/start", publicOnlyMiddleware, startGithubSignin);
 userRouter.get("/github/finish", publicOnlyMiddleware, finishGithubSignin);
+userRouter.get("/kakao/start", publicOnlyMiddleware, startKakaoSignin);
+userRouter.get("/kakao/finish", publicOnlyMiddleware, finishKakaoSignin);
 userRouter.get("/signout", protectorMiddleware, signout);
 userRouter.get("/:id", profile);
 userRouter
