@@ -12,12 +12,10 @@ mixin searchResults(info)
             div.video_profileContainer
                 div.video_creator_info
                     a(href=`/users/${info.owner._id}`)
-                        if loggedInUser.socialOnly
-                            img(src=loggedInUser.avatarUrl width="25", height="25")#profile_url
-                        else if !loggedInUser.avartarUrl
-                            img(src="https://i.stack.imgur.com/l60Hf.png" width="25", height="25")#profile_url
-                        else
-                            img(src=loggedInUser.avatarUrl width="25", height="25")#profile_url                
+                        img(src=info.owner.avatarUrl ? info.owner.avatarUrl : "https://i.stack.imgur.com/l60Hf.png",
+                            width="25", 
+                            height="25"
+                            )#profile_url                
                     a(href=`/users/${info.owner._id}`)#video_creator=info.owner.username
                 div.video_description
                     span=info.description  
